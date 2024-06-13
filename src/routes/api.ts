@@ -1,11 +1,10 @@
-import postController from "@/controllers/postController";
 import express, { Router } from "express";
-
+import { postApiRouter } from "./postApi";
+import { userApiRouter } from "./userApi";
 const apiRouter: Router = express.Router();
 
-apiRouter.use('/v1', apiRouter);
-apiRouter.get('/posts', postController.getAllPosts);
-apiRouter.post('/posts', postController.createPost);
+apiRouter.use('/v1/posts', postApiRouter);
+apiRouter.use('/v1/users', userApiRouter);
 
 export { apiRouter };
 

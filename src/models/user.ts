@@ -16,6 +16,7 @@ User.init({
     username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
     },
 
     password: {
@@ -23,10 +24,20 @@ User.init({
         allowNull: false,
     },
 
+    email: {
+        type: DataTypes.STRING,
+        unique: true,
+    },
+
     fullName: {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'full_name',
+    },
+
+    avatar: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 }, {
     tableName: 'users',

@@ -5,8 +5,7 @@ import bodyParser from "body-parser";
 import multer from "multer";
 export const useLibrary = (app: Application) => {
     const upload = multer();
-
-    app.use(upload.any());
+    app.use(upload.none());
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(bodyParser.json());

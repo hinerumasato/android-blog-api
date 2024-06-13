@@ -27,6 +27,10 @@ Post.init({
             key: 'id',
         }
     },
+    thumbnail: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     categoryId: {
         type: DataTypes.BIGINT,
         allowNull: false,
