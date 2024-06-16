@@ -1,6 +1,7 @@
 import { UserMapper } from "@/mappers/UserMapper";
 import { User } from "@/models";
 import { UserService } from "@/services/userService";
+import { Arrays } from "@/utils/Arrays";
 import { Decrypt } from "@/utils/Decrypt";
 import { ResponseBody } from "@/utils/ResponseBody";
 import { Request, Response } from "express";
@@ -15,13 +16,28 @@ class UserController {
     }
 
     findAll = async (req: Request, res: Response) => {
-        const data = await this.userService.findAll();
-        const dtos = data.map(item => UserMapper.toDTO(item));
-        return res.status(200).json({
-            statusCode: 200,
-            message: 'Get list user success',
-            data: dtos
-        })
+        const { username, fullName, email } = req.query;
+        let data: Array<User> | null = null;
+
+        data = (Arrays.isContainElementValid([username, fullName, email])) 
+        ? await this.userService.findAllByCondition({ username, fullName, email })
+        : await this.userService.findAll();
+        
+
+        if(!Arrays.isEmpty(data)) {
+            data = data as Array<User>;
+            const dtos = data.map(item => UserMapper.toDTO(item));
+            return res.status(200).json({
+                statusCode: 200,
+                message: 'Get list user success',
+                data: dtos
+            })
+        } else {
+            return res.status(404).json({
+                statusCode: 404,
+                message: 'Not found'
+            })
+        }
     }
 
     findById = async (req: Request, res: Response) => {

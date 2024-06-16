@@ -1,17 +1,21 @@
-import { CanCRUD } from "@/interfaces/canCRUD";
 import { Post } from "@/models";
+import { Model, ModelStatic } from "sequelize";
+import { AbstractService } from "./abstractService";
 
-export class PostService implements CanCRUD<Post> {
+export class PostService extends AbstractService<Post> {
+    protected get model(): ModelStatic<Model<{}, {}>> {
+        return Post;
+    }
 
-    findAll(): Promise<Post[]> {
+    findAll = (): Promise<Post[]> => {
         return Post.findAll();
     };
 
-    findById(id: number): Promise<Post | null> {
+    findById = (id: number): Promise<Post | null> => {
         return Post.findOne({ where: { id } });
     };
 
-    create(data: Post): Promise<Post> {
+    create = (data: Post): Promise<Post> => {
         return Post.create({
             title: data.getDataValue('title'),
             content: data.getDataValue('content'),
@@ -20,7 +24,7 @@ export class PostService implements CanCRUD<Post> {
         })
     };
 
-    update(id: number, data: Post): Promise<[affectedCount: number]> {
+    update = (id: number, data: Post): Promise<[affectedCount: number]> => {
         return Post.update({
             title: data.getDataValue('title'),
             content: data.getDataValue('content'),
@@ -29,9 +33,7 @@ export class PostService implements CanCRUD<Post> {
         }, { where: { id } })
     };
 
-    delete(id: number): Promise<number> {
+    delete = (id: number): Promise<number> => {
         return Post.destroy({ where: { id } });
     };
-    
-
 }

@@ -1,7 +1,12 @@
-import { CanCRUD } from "@/interfaces/canCRUD";
 import { User } from "@/models";
+import { Model, ModelStatic } from "sequelize";
+import { AbstractService } from "./abstractService";
 
-export class UserService implements CanCRUD<User> {
+export class UserService extends AbstractService<User> {
+    protected get model(): ModelStatic<Model<{}, {}>> {
+        return User;
+    }
+
     findAll = () => {
         return User.findAll();
     };
@@ -42,5 +47,4 @@ export class UserService implements CanCRUD<User> {
     delete = (id: number) => {
         return User.destroy({ where: { id } });
     };
-
 }
