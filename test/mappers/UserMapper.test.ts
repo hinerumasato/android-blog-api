@@ -12,13 +12,7 @@ describe('UserMapper Test', () => {
             fullName: 'Test',
         }
         const user = {
-            getDataValue: (key: string) => {
-                if(key === 'id') return userObj.id;
-                if(key === 'username') return userObj.username;
-                if(key === 'email') return userObj.email;
-                if(key === 'fullName') return userObj.fullName;
-                return null;
-            }
+            ...userObj,
         } as unknown as User;
         const userDTO = UserMapper.toDTO(user);
 
