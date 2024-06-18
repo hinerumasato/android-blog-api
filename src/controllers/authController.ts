@@ -1,6 +1,4 @@
 import { AccessToken } from "@/interfaces";
-import { UserMapper } from "@/mappers/UserMapper";
-import { User } from "@/models";
 import { AuthService } from "@/services";
 import { Decrypt } from "@/utils";
 import { Request, Response } from "express";
@@ -14,7 +12,6 @@ class AuthController {
     }
 
     public login = async (req: Request, res: Response) => {
-
         const { username, password } = req.body;
         const user = await this.authService.login(username, password);
         if (user) {
@@ -42,9 +39,9 @@ class AuthController {
         }
     }
 
-    public me = async (req: Request, res: Response) => {
+    public logout = async (req: Request, res: Response) => {
+        const { user } = this.authService.me(req);
         const bearer = req.headers.authorization;
-        const session = req.session;
 
         if(!bearer) {
             return res.status(401).json({
@@ -53,40 +50,27 @@ class AuthController {
             });
         }
 
-        if(!bearer.startsWith('Bearer ')) {
+        if(user) {
+            const accessTokens = req.session.accessTokens as AccessToken;
+            delete accessTokens[bearer];
+            return res.json({
+                statusCode: 200,
+                message: 'Logout successfully'
+            });
+        } else {
             return res.status(401).json({
                 statusCode: 401,
-                message: 'Prefix Bearer not found'
+                message: 'Unauthorized'
             });
         }
-        
-        const token = bearer;
-        const accessTokens = session.accessTokens as AccessToken;
-        
-        if(!accessTokens[token]) {
-            return res.status(401).json({
-                statusCode: 401,
-                message: 'Invalid token'
-            });
-        }
+    }
 
-        const accessToken = accessTokens[token];
-        if(accessToken.expires < Date.now()) {
-            delete accessTokens[token];
-            return res.status(401).json({
-                statusCode: 401,
-                message: 'Token expired'
-            });
-        }
-
-
-        const user = accessToken.user as User;
-        const userDTO = UserMapper.toDTO(user);
-
-        return res.json({
-            statusCode: 200,
-            message: 'Success',
-            data: userDTO
+    public me = async (req: Request, res: Response) => {
+        const { user, message, statusCode } = this.authService.me(req);
+        return res.status(statusCode).json({
+            statusCode: statusCode,
+            message: message,
+            user: user
         });
     }
 }
