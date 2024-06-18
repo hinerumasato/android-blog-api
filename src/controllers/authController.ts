@@ -70,7 +70,7 @@ class AuthController {
         return res.status(statusCode).json({
             statusCode: statusCode,
             message: message,
-            user: user
+            data: user
         });
     }
 }

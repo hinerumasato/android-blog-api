@@ -8,13 +8,13 @@ export const sequelize = new Sequelize({
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
+    timezone: '+07:00',
+    logging: false,
 });
-
 
 
 sequelize.authenticate().then(() => {
     console.log('Database connect successfully');
-    sequelize.query("SET time_zone = '+7:00';");
 }).catch(() => {
     console.log('Database connect failed');
 })
