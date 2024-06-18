@@ -5,7 +5,7 @@ import { Arrays } from "@/utils/Arrays";
 import { Decrypt } from "@/utils/Decrypt";
 import { ResponseBody } from "@/utils/ResponseBody";
 import { Request, Response } from "express";
-import { UniqueConstraintError } from "sequelize";
+import { ForeignKeyConstraintError, UniqueConstraintError } from "sequelize";
 
 class UserController {
 
@@ -115,18 +115,27 @@ class UserController {
 
     delete = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
-        const affectedCount = await this.userService.delete(id);
-        if(affectedCount > 0) {
-            res.json({
-                statusCode: 200,
-                message: 'User deleted successfully',
-                affectedCount: affectedCount
-            });
-        } 
-        else {
-            res.status(404).json({
-                statusCode: 404,
-                message: 'User not found' 
+        try {
+            const affectedCount = await this.userService.delete(id);
+            if(affectedCount > 0) {
+                res.json({
+                    statusCode: 200,
+                    message: 'User deleted successfully',
+                    affectedCount: affectedCount
+                });
+            } 
+            else {
+                res.status(404).json({
+                    statusCode: 404,
+                    message: 'User not found' 
+                });
+            }
+        } catch(error) {
+            const sequelizeError = error as ForeignKeyConstraintError;
+            res.status(500).json({
+                statusCode: 500,
+                message: 'Internal server error',
+                error: sequelizeError.message
             });
         }
     }

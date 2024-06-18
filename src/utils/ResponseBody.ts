@@ -18,4 +18,11 @@ export class ResponseBody {
         if(!fullName) invalidFiels.push('fullName');
         return invalidFiels;
     }
+
+    static getInvalidCategoryFields = (body: any) => {
+        const { name } = body;
+        const invalidFiels = [];
+        if(!name) invalidFiels.push('name');
+        return invalidFiels;
+    }
 }
