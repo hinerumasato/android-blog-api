@@ -1,7 +1,14 @@
 import { sequelize } from "@/configs/database";
 import { DataTypes, Model } from "sequelize";
 
-export class Post extends Model {}
+export class Post extends Model {
+    public id!: number;
+    public title!: string;
+    public content!: string;
+    public userId!: number;
+    public thumbnail!: string;
+    public categoryId!: number;
+}
 
 Post.init({
     id: {

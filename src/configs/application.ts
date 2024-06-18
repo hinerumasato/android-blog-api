@@ -3,6 +3,11 @@ import { apiRouter } from "@/routes/api";
 import express, { Application } from "express";
 import bodyParser from "body-parser";
 import multer from "multer";
+import session from "express-session";
+import { configDotenv } from "dotenv";
+import { createSession } from "@/middlewares";
+configDotenv();
+
 export const useMiddlewares = (app: Application) => {
     const upload = multer();
     app.use(upload.none());
@@ -10,6 +15,13 @@ export const useMiddlewares = (app: Application) => {
     app.use(express.json());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(session({
+        secret: process.env.HASH_SECRET as string,
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false }
+    }))
+    app.use(createSession);
     app.use("/api", apiRouter);
 }
 

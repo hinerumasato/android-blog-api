@@ -1,7 +1,10 @@
 import { sequelize } from "@/configs/database";
 import { DataTypes, Model } from "sequelize";
 
-export class Category extends Model {}
+export class Category extends Model {
+    public id!: number;
+    public name!: string;
+}
 Category.init({
     id: {
         type: DataTypes.BIGINT,

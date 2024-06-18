@@ -2,9 +2,12 @@ import { sequelize } from "@/configs/database";
 import { DataTypes, Model } from "sequelize";
 
 export class User extends Model {
-    public static getSequelize() {
-        return sequelize;
-    }
+    public id!: number;
+    public username!: string;
+    public password!: string;
+    public email!: string;
+    public fullName!: string;
+    public avatar!: string;
 };
 User.init({
     id: {
