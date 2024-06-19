@@ -17,19 +17,21 @@ export class PostService extends AbstractService<Post> {
 
     create = (data: Post): Promise<Post> => {
         return Post.create({
-            title: data.getDataValue('title'),
-            content: data.getDataValue('content'),
-            userId: data.getDataValue('userId'),
-            categoryId: data.getDataValue('categoryId')
+            title: data.title,
+            content: data.content,
+            thumbnail: data.thumbnail,
+            userId: data.userId,
+            categoryId: data.categoryId,
         })
     };
 
     update = (id: number, data: Post): Promise<[affectedCount: number]> => {
         return Post.update({
-            title: data.getDataValue('title'),
-            content: data.getDataValue('content'),
-            userId: data.getDataValue('userId'),
-            categoryId: data.getDataValue('categoryId')
+            title: data.title,
+            content: data.content,
+            thumbnail: data.thumbnail,
+            userId: data.userId,
+            categoryId: data.categoryId,
         }, { where: { id } })
     };
 

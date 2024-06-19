@@ -1,9 +1,10 @@
 import express, { Application } from "express";
-import { migrate, useMiddlewares } from "./configs/application";
+import { migrate, useMiddlewares, useStatic } from "./configs/application";
 const PORT = 3000;
 const app: Application = express();
 
 useMiddlewares(app);
+useStatic(app);
 migrate();
 
 app.listen(PORT, () => {

@@ -24,22 +24,13 @@ export class UserService extends AbstractService<User> {
     
     }
     update = (id: number, data: User) => {
-        const updateData: {
-            username: string,
-            email: string,
-            password: string,
-            fullName: string,
-            avatar?: string
-        
-        } = {
-            username: data.getDataValue('username'),
-            email: data.getDataValue('email'),
-            password: data.getDataValue('password'),
-            fullName: data.getDataValue('fullName'),
-        };
-        const avatar = data.getDataValue('avatar');
-        if(avatar) {
-            updateData.avatar = avatar;
+
+        const updateData = {
+            username: data.username,
+            password: data.password,
+            email: data.email,
+            fullName: data.fullName,
+            avatar: data.avatar
         }
 
         return User.update(updateData, { where: { id } });

@@ -3,15 +3,18 @@ import { User } from "@/models";
 import { UserService } from "@/services/userService";
 import { Arrays } from "@/utils/Arrays";
 import { Decrypt } from "@/utils/Decrypt";
+import { Files } from "@/utils/Files";
 import { ResponseBody } from "@/utils/ResponseBody";
+import { configDotenv } from "dotenv";
 import { Request, Response } from "express";
-import { ForeignKeyConstraintError, UniqueConstraintError } from "sequelize";
+import { ForeignKeyConstraintError, SequelizeScopeError, UniqueConstraintError } from "sequelize";
 
 class UserController {
 
     private userService: UserService;
 
     constructor() {
+        configDotenv();
         this.userService = new UserService();
     }
 
@@ -58,9 +61,12 @@ class UserController {
     }
 
     create = async (req: Request, res: Response) => {
-        const { username, password, email, fullName, avatar } = req.body;
+        const { username, password, email, fullName } = req.body;
+        const file = req.file;
+        const avatar = Files.getPublicPath(file);
         const invalidFields = ResponseBody.getInvalidUserFields(req.body);
         if(invalidFields.length > 0) {
+            Files.removeSync(file);
             return res.status(400).json({ 
                 statusCode: 400,
                 message: 'Invalid fields', invalidFields 
@@ -78,6 +84,7 @@ class UserController {
         } catch (error) {
             const uniqueError = error as UniqueConstraintError;
             const errorMessages = uniqueError.errors.map((error) => error.message);
+            Files.removeSync(file);
             return res.status(500).json({ 
                 statusCode: 500,
                 message: 'Internal server error',
@@ -87,6 +94,7 @@ class UserController {
     }
 
     update = async (req: Request, res: Response) => {
+        const { username, password, email, fullName } = req.body;
         const invalidFields = ResponseBody.getInvalidUserFields(req.body);
         const id = parseInt(req.params.id);
         if(invalidFields.length > 0) {
@@ -96,26 +104,54 @@ class UserController {
                 invalidFields 
             });
         }
+        
+        const file = req.file;
+        const avatar = Files.getPublicPath(file);
+        const oldUser = await this.userService.findById(id);
+        const oldAvatar = oldUser?.avatar;
 
-        const user = User.build({ ...req.body });
-        const [rowsAffected] = await this.userService.update(id, user);
-        if(rowsAffected > 0) {
-            return res.status(200).json({
-                statusCode: 200,
-                message: 'Update user successfully',
-                rowsAffected
-            })
-        } else {
-            return res.status(400).json({
-                statusCode: 400,
-                message: 'User not found'
-            })
+        const buildBody = avatar 
+            ? { username, password: Decrypt.sha256(password), email, fullName, avatar }
+            : { username, password: Decrypt.sha256(password), email, fullName }
+        
+        const user = User.build(buildBody);
+        try {
+            const [rowsAffected] = await this.userService.update(id, user);
+            
+            if(rowsAffected > 0) {
+                const entryDir = process.env.UPLOAD_ENTRY_DIR as string;
+                Files.removeSyncByPath(`${entryDir}${oldAvatar}`);
+    
+                return res.status(200).json({
+                    statusCode: 200,
+                    message: 'Update user successfully',
+                    rowsAffected
+                })
+            } else {
+                return res.status(400).json({
+                    statusCode: 400,
+                    message: 'User not found'
+                })
+            }
+        } catch (error) {
+            const sequelizeError = error as SequelizeScopeError;
+            return res.status(500).json({
+                statusCode: 500,
+                message: 'Internal server error',
+                error: sequelizeError.message
+            });
         }
     }
 
     delete = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try {
+            const user = await this.userService.findById(id);
+            if(user) {
+                const avatar = user.avatar;
+                const entryDir = process.env.UPLOAD_ENTRY_DIR as string;
+                Files.removeSyncByPath(`${entryDir}${avatar}`);
+            }
             const affectedCount = await this.userService.delete(id);
             if(affectedCount > 0) {
                 res.json({
