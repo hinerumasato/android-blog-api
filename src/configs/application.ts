@@ -1,4 +1,4 @@
-import { createSession } from "@/middlewares";
+import { authorization, createSession } from "@/middlewares";
 import { mkdir } from "@/middlewares/mkdir";
 import { MigrationSynchronous } from "@/migration/synchronous";
 import { apiRouter } from "@/routes/api";

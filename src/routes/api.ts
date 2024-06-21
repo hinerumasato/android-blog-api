@@ -1,8 +1,8 @@
 import express, { Router } from "express";
-import { postApiRouter } from "./postApi";
-import { userApiRouter } from "./userApi";
 import { authApiRouter } from "./authApi";
 import { categoryApiRouter } from "./categoryApi";
+import { postApiRouter } from "./postApi";
+import { userApiRouter } from "./userApi";
 const apiRouter: Router = express.Router();
 
 apiRouter.use('/v1/posts', postApiRouter);
