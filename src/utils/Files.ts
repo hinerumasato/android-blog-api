@@ -1,3 +1,4 @@
+import { configDotenv } from 'dotenv';
 import fs from 'fs'
 
 export class Files {
@@ -35,5 +36,12 @@ export class Files {
         if(fs.existsSync(path)) {
             fs.unlinkSync(path);
         }
+    }
+
+    public static removePublicFileSyncByPath(path: string): void {
+        configDotenv();
+        const entryDir = process.env.UPLOAD_ENTRY_DIR as string;
+        const fullPath = `${entryDir}${path}`;
+        this.removeSyncByPath(fullPath);
     }
 }

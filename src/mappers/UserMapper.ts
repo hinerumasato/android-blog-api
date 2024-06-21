@@ -9,6 +9,14 @@ export class UserMapper {
             user.email,
             user.fullName,
             user.avatar,
+            user.DOB,
+            user.story,
+            user.relationship,
+            user.relationshipDescription,
+            user.nationality,
+            user.nationalityDescription,
+            user.company,
+            user.companyDescription
         );
     }
 }

@@ -8,6 +8,15 @@ export class User extends Model {
     public email!: string;
     public fullName!: string;
     public avatar!: string;
+    public DOB!: Date;
+    public story!: string;
+    public relationship!: string;
+    public relationshipDescription!: string;
+    public nationality!: string;
+    public nationalityDescription!: string;
+    public company!: string;
+    public companyDescription!: string;
+
 };
 User.init({
     id: {
@@ -41,6 +50,49 @@ User.init({
     avatar: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+
+    DOB: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+
+    story: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+
+    relationship: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+
+    relationshipDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        field: 'relationship_description',
+    },
+
+    nationality: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    
+    nationalityDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        field: 'nationality_description',
+    },
+
+    company: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    
+    companyDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        field: 'company_description',
     },
 }, {
     tableName: 'users',
