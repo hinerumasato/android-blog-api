@@ -36,7 +36,7 @@ export class UserService extends AbstractService<User> {
         return User.destroy({ where: { id } });
     };
 
-    public createOrUpdateUser = async (req: Request, isCreate = true): Promise<User | [affectedCount: number]> => {
+    public saveOrUpdate = async (req: Request, isCreate = true): Promise<User | [affectedCount: number]> => {
         const file = req.file;
         const avatar = Files.getPublicPath(file);
         const hashedPassword = Decrypt.sha256(req.body.password);

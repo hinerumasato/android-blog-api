@@ -66,7 +66,7 @@ class UserController {
         }
         
         try {
-            const user = await this.userService.createOrUpdateUser(req) as User;
+            const user = await this.userService.saveOrUpdate(req) as User;
             return res.status(201).json({
                 statusCode: 201,
                 message: 'Create user successfully',
@@ -89,7 +89,7 @@ class UserController {
             return res.status(400).json(validator.getError());
         }
         try {
-            const [affectedCount] = await this.userService.createOrUpdateUser(req, false) as [number];    
+            const [affectedCount] = await this.userService.saveOrUpdate(req, false) as [number];    
             return res.status(200).json({
                 statusCode: 200,
                 message: 'Update user successfully',
