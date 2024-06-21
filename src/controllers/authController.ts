@@ -19,13 +19,13 @@ class AuthController {
             const token = 'Bearer ' + Decrypt.generateUserToken(user);
             const accessTokens = session.accessTokens as AccessToken;
 
-            if(!accessTokens[token]) {
+            if (!accessTokens[token]) {
                 accessTokens[token] = {
                     user: user,
                     expires: Date.now() + 3600000 * 24 * 7,
                 }
             }
-        
+
             return res.json({
                 statusCode: 200,
                 message: 'Login successfully',
@@ -40,29 +40,13 @@ class AuthController {
     }
 
     public logout = async (req: Request, res: Response) => {
-        const { user } = this.authService.me(req);
-        const bearer = req.headers.authorization;
-
-        if(!bearer) {
-            return res.status(401).json({
-                statusCode: 401,
-                message: 'Unauthorized'
-            });
-        }
-
-        if(user) {
-            const accessTokens = req.session.accessTokens as AccessToken;
-            delete accessTokens[bearer];
-            return res.json({
-                statusCode: 200,
-                message: 'Logout successfully'
-            });
-        } else {
-            return res.status(401).json({
-                statusCode: 401,
-                message: 'Unauthorized'
-            });
-        }
+        const bearer = req.headers.authorization as string;
+        const accessTokens = req.session.accessTokens as AccessToken;
+        delete accessTokens[bearer];
+        return res.json({
+            statusCode: 200,
+            message: 'Logout successfully'
+        });
     }
 
     public me = async (req: Request, res: Response) => {

@@ -6,6 +6,6 @@ const authApiRouter = express.Router();
 
 authApiRouter.post('/login', noUpload, authController.login);
 authApiRouter.get('/me', authorization, authController.me);
-authApiRouter.post('/logout', noUpload, authController.logout);
+authApiRouter.post('/logout', authorization, authController.logout);
 
 export { authApiRouter };
