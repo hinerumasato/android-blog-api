@@ -88,31 +88,19 @@ class UserController {
         if (!validator.validate()) {
             return res.status(400).json(validator.getError());
         }
-
-        const oldUser = await this.userService.findById(id);
-        if(oldUser) {
-            const oldAvatar = oldUser.avatar;
-            Files.removePublicFileSyncByPath(oldAvatar);
-            try {
-                const [affectedCount] = await this.userService.createOrUpdateUser(req, false) as [number];    
-                console.log(affectedCount);                            
-                return res.status(200).json({
-                    statusCode: 200,
-                    message: 'Update user successfully',
-                    affectedCount: affectedCount,
-                });
-            }
-            catch (error) {
-                return res.status(500).json({
-                    statusCode: 500,
-                    message: 'Internal server error',
-                    error: error
-                });
-            }
-        } else {
-            return res.status(404).json({
-                statusCode: 404,
-                message: 'User not found'
+        try {
+            const [affectedCount] = await this.userService.createOrUpdateUser(req, false) as [number];    
+            return res.status(200).json({
+                statusCode: 200,
+                message: 'Update user successfully',
+                affectedCount: affectedCount,
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                statusCode: 500,
+                message: 'Internal server error',
+                error: error
             });
         }
     }

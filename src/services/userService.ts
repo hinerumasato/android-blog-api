@@ -4,6 +4,7 @@ import { AbstractService } from "./abstractService";
 import { Request } from "express";
 import { Files } from "@/utils/Files";
 import { Decrypt } from "@/utils";
+import { UserNotFoundError } from "@/errors";
 
 export class UserService extends AbstractService<User> {
     protected get model(): ModelStatic<Model<{}, {}>> {
@@ -21,12 +22,15 @@ export class UserService extends AbstractService<User> {
             ...data.dataValues,
         });
     }
-    update = (id: number, data: User) => {
-        console.log(data);
-        
-        const updateData = { ...data.dataValues };
-        delete updateData.id;
-        return User.update(updateData, { where: { id } });
+    update = async (id: number, data: User): Promise<[affectedCount: number]> => {
+        const user = await this.findById(id);
+        if(user) {
+            const avatar = user.avatar;
+            Files.removePublicFileSyncByPath(avatar);
+            delete data.dataValues.id;
+            return await User.update({ ...data.dataValues }, { where: { id } });            
+        }
+        throw new UserNotFoundError();
     };
     delete = (id: number) => {
         return User.destroy({ where: { id } });
