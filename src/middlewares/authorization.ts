@@ -6,7 +6,7 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
     const session = req.session;
 
     if (!bearer) {
-        return res.status(401).json({ user: null, message: 'Unauthorized', statusCode: 401 });
+        return res.status(401).json({ user: null, message: 'Unauthorized, you need add access token into authorization header', statusCode: 401 });
     }
 
     if (!bearer.startsWith('Bearer ')) {
