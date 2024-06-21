@@ -12,29 +12,8 @@ export class AuthService {
     }
 
     public me = (req: Request): { user: UserDTO | null, message: string, statusCode: number } => {
-        const bearer = req.headers.authorization;
-        const session = req.session;
-
-        if(!bearer) {
-            return { user: null, message: 'Unauthorized', statusCode: 401};
-        }
-
-        if(!bearer.startsWith('Bearer ')) {
-            return { user: null, message: 'Prefix Bearer not found', statusCode: 401};
-        }
-
-        const token = bearer;
-        const accessTokens = session.accessTokens as AccessToken;
-
-        if(!accessTokens[token]) {
-            return { user: null, message: 'Invalid token', statusCode: 401};
-        }
-
-        if(accessTokens[token].expires < Date.now()) {
-            delete accessTokens[token];
-            return { user: null, message: 'Token expired', statusCode: 401};
-        }
-
+        const token = req.headers.authorization as  string;
+        const accessTokens = req.session.accessTokens as AccessToken;
         const user = accessTokens[token].user as User;
         const userDTO = UserMapper.toDTO(user);
 
