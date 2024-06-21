@@ -32,8 +32,14 @@ export class UserService extends AbstractService<User> {
         }
         throw new UserNotFoundError();
     };
-    delete = (id: number) => {
-        return User.destroy({ where: { id } });
+    delete = async (id: number): Promise<number> => {
+        const user = await this.findById(id);
+        if(user) {
+            const avatar = user.avatar;
+            Files.removePublicFileSyncByPath(avatar);
+            return await User.destroy({ where: { id } });
+        }
+        throw new UserNotFoundError();
     };
 
     public saveOrUpdate = async (req: Request, isCreate = true): Promise<User | [affectedCount: number]> => {

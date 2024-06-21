@@ -2,11 +2,9 @@ import { UserMapper } from "@/mappers/UserMapper";
 import { User } from "@/models";
 import { UserService } from "@/services/userService";
 import { Arrays } from "@/utils/Arrays";
-import { Files } from "@/utils/Files";
 import { UserValidator } from "@/validators/UserValidator";
 import { configDotenv } from "dotenv";
 import { Request, Response } from "express";
-import { ForeignKeyConstraintError } from "sequelize";
 
 class UserController {
 
@@ -64,7 +62,7 @@ class UserController {
         if (!validator.validate()) {
             return res.status(400).json(validator.getError());
         }
-        
+
         try {
             const user = await this.userService.saveOrUpdate(req) as User;
             return res.status(201).json({
@@ -89,7 +87,7 @@ class UserController {
             return res.status(400).json(validator.getError());
         }
         try {
-            const [affectedCount] = await this.userService.saveOrUpdate(req, false) as [number];    
+            const [affectedCount] = await this.userService.saveOrUpdate(req, false) as [number];
             return res.status(200).json({
                 statusCode: 200,
                 message: 'Update user successfully',
@@ -108,32 +106,19 @@ class UserController {
     delete = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         try {
-            const user = await this.userService.findById(id);
-            if (user)
-                Files.removePublicFileSyncByPath(user.avatar);
             const affectedCount = await this.userService.delete(id);
-            if (affectedCount > 0) {
-                res.json({
-                    statusCode: 200,
-                    message: 'User deleted successfully',
-                    affectedCount: affectedCount
-                });
-            }
-            else {
-                res.status(404).json({
-                    statusCode: 404,
-                    message: 'User not found'
-                });
-            }
+            res.json({
+                statusCode: 200,
+                message: 'User deleted successfully',
+                affectedCount: affectedCount
+            });
         } catch (error) {
-            const sequelizeError = error as ForeignKeyConstraintError;
             res.status(500).json({
                 statusCode: 500,
                 message: 'Internal server error',
-                error: sequelizeError.message
+                error: error
             });
         }
     }
 }
-
 export default new UserController();
