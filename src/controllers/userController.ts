@@ -81,7 +81,6 @@ class UserController {
     }
 
     update = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
         const validator = new UserValidator(req);
         if (!validator.validate()) {
             return res.status(400).json(validator.getError());

@@ -1,4 +1,4 @@
-import { Post } from "@/models";
+import { Category, Post, User } from "@/models";
 import { Model, ModelStatic } from "sequelize";
 import { AbstractService } from "./abstractService";
 
@@ -8,7 +8,13 @@ export class PostService extends AbstractService<Post> {
     }
 
     findAll = (): Promise<Post[]> => {
-        return Post.findAll();
+        return Post.findAll({
+            include: [
+                { model: User, as: 'user', attributes: { exclude: ['password'] } },
+                { model: Category, as: 'category'}
+            ],
+            
+        });
     };
 
     findById = (id: number): Promise<Post | null> => {

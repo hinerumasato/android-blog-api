@@ -11,15 +11,10 @@ class PostController {
 
     constructor() {
         this.postService = new PostService();
-        this.getAllPosts = this.getAllPosts.bind(this);
-        this.createPost = this.createPost.bind(this);
-        this.updatePost = this.updatePost.bind(this);
-        this.deletePost = this.deletePost.bind(this);
-
         configDotenv();
     }
 
-    async getAllPosts(req: Request, res: Response) {
+    getAllPosts = async (req: Request, res: Response) => {
         const posts = await this.postService.findAll();
         if(!Arrays.isEmpty(posts)) {
             res.json({
@@ -35,7 +30,24 @@ class PostController {
         }
     }
 
-    async createPost(req: Request, res: Response) {
+    getPostById = async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const post = await this.postService.findById(id);
+        if(post) {
+            res.json({
+                statusCode: 200,
+                message: 'Success',
+                data: post
+            });
+        } else {
+            res.status(404).json({
+                statusCode: 404,
+                message: 'Post not found'
+            });
+        }
+    }
+
+    createPost = async (req: Request, res: Response) => {
         const invalidFields = ResponseBody.getInvalidPostFields(req.body);
         const { title, content, userId, categoryId } = req.body;
         if(invalidFields.length > 0) {
@@ -64,7 +76,7 @@ class PostController {
         }
     }
 
-    async updatePost(req: Request, res: Response) {
+    updatePost = async (req: Request, res: Response) => {
         const { title, content, userId, categoryId } = req.body;
         const id = parseInt(req.params.id);
         const invalidFields = ResponseBody.getInvalidPostFields(req.body);
@@ -108,7 +120,7 @@ class PostController {
 
     }
 
-    async deletePost(req: Request, res: Response) {
+    deletePost = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const affectedCount = await this.postService.delete(id);
         const post = await this.postService.findById(id);

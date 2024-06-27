@@ -34,7 +34,7 @@ export const migrate = () => {
             console.log("Drop all tables");
         })
     }
-    migration.sync().then(() => {
+    migration.migrate().then(() => {
         console.log('Migration successfully');
     })
 }

@@ -1,5 +1,6 @@
 import { sequelize } from "@/configs/database";
 import { DataTypes, Model } from "sequelize";
+import { Post } from "./post";
 
 export class User extends Model {
     public id!: number;
@@ -16,6 +17,7 @@ export class User extends Model {
     public nationalityDescription!: string;
     public company!: string;
     public companyDescription!: string;
+    public posts!: Array<Post>
 
 };
 User.init({

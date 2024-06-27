@@ -1,3 +1,5 @@
+import { Post } from "@/models";
+
 export class UserDTO {
     private id: number | null;
     private username: string;
@@ -12,6 +14,7 @@ export class UserDTO {
     private nationalityDescription: string | null;
     private company: string | null;
     private companyDescription: string | null;
+    private posts: Array<Post> | null;
 
     public constructor(
         id: number | null, 
@@ -26,7 +29,8 @@ export class UserDTO {
         nationality: string | null = null,
         nationalityDescription: string | null = null,
         company: string | null = null,
-        companyDescription: string | null = null
+        companyDescription: string | null = null,
+        posts: Array<Post> | null = null
     ) {
         this.id = id;
         this.username = username
@@ -41,5 +45,6 @@ export class UserDTO {
         this.nationalityDescription = nationalityDescription;
         this.company = company;
         this.companyDescription = companyDescription;
+        this.posts = posts;
     }
 }

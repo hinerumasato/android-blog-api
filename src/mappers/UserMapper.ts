@@ -16,7 +16,8 @@ export class UserMapper {
             user.nationality,
             user.nationalityDescription,
             user.company,
-            user.companyDescription
+            user.companyDescription,
+            user.posts,
         );
     }
 }
