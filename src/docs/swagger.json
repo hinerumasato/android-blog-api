@@ -90,9 +90,9 @@
 
             "post": {
                 "tags": [
-                    "users"
+                    "users", "auth"
                 ],
-                "summary": "Create a new user",
+                "summary": "Create a new user, Register",
                 "requestBody": {
                     "required": true,
                     "content": {
