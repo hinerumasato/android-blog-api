@@ -25,4 +25,12 @@ export class ResponseBody {
         if(!name) invalidFiels.push('name');
         return invalidFiels;
     }
+
+    static getInvalidLovePostFields = (body: any) => {
+        const { postId, userId } = body;
+        const invalidFiels = [];
+        if(!postId) invalidFiels.push('postId');
+        if(!userId) invalidFiels.push('userId');
+        return invalidFiels;
+    }
 }

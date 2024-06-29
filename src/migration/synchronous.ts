@@ -1,10 +1,11 @@
 import { Post, User, Category } from "@/models";
+import { LovePost } from "@/models/lovePost";
 export class MigrationSynchronous {
-    private models = [User, Category, Post];
+    private models = [User, Category, Post, LovePost];
 
     public async migrate() {
-        await this.sync();
         await this.establishRelationship();
+        await this.sync();
     }
 
     private async establishRelationship() {
@@ -30,6 +31,20 @@ export class MigrationSynchronous {
             targetKey: 'id',
             foreignKey: 'categoryId',
             as: 'category',
+        });
+
+        User.belongsToMany(Post, { through: LovePost, foreignKey: 'userId', otherKey: 'postId', onDelete: 'CASCADE' });
+        Post.belongsToMany(User, { through: LovePost, foreignKey: 'postId', otherKey: 'userId', onDelete: 'CASCADE' });
+
+        LovePost.belongsTo(User, { 
+            targetKey: 'id',
+            foreignKey: 'userId',
+            as: 'user',
+        });
+        LovePost.belongsTo(Post, { 
+            foreignKey: 'postId',
+            targetKey: 'id',
+            as: 'post',
         });
     }
 

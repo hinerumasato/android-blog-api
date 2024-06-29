@@ -5,10 +5,12 @@ import { apiRouter } from "@/routes/api";
 import { configDotenv } from "dotenv";
 import express, { Application } from "express";
 import session from "express-session";
-import path from 'path';
+import path from "path";
+import cors from "cors";
 configDotenv();
 
 export const useMiddlewares = (app: Application) => {
+    app.use(cors({ origin: '*' }))
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(session({

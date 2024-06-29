@@ -15,6 +15,8 @@ class UserController {
         this.userService = new UserService();
     }
 
+
+    
     findAll = async (req: Request, res: Response) => {
         const { username, fullName, email } = req.query;
         let data: Array<User> | null = null;
