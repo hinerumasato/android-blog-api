@@ -840,6 +840,11 @@
                         "type": "integer",
                         "format": "int64",
                         "description": "User ID of the post's author"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Category ID of the post"
                     }
                 },
                 "required": [
