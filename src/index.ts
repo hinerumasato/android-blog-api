@@ -14,4 +14,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`API documentation is running on http://localhost:${PORT}/api-docs`);
+    
 });
