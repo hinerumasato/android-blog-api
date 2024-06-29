@@ -1,14 +1,24 @@
 {
-    "swagger": "2.0",
+    "openapi": "3.1.0",
     "info": {
         "title": "Blog API",
         "version": "1.0.0",
-        "description": "API for blog android app"
+        "description": "This API serves as the backend for a blog application tailored for Android devices, providing a robust platform for users to create, read, update, and delete blog posts. It supports user authentication, allowing for personalized experiences such as saving favorite posts and managing user profiles. Additionally, the API facilitates interactions between users through comments and likes on posts, enhancing the community aspect of the blogging platform.",
+        "contact": {
+            "name": "Thang Loi Tran",
+            "email": "thangloitran406@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
     },
     "host": "localhost:3000",
-    "basePath": "/api/v1",
-    "schemes": [
-        "http"
+    "servers": [
+        {
+            "url": "http://localhost:3000/api/v1",
+            "description": "Base API URL"
+        }
     ],
     "tags": [
         {
@@ -18,7 +28,7 @@
         {
             "name": "posts",
             "description": "Post management, CRUD operations"
-        }, 
+        },
         {
             "name": "categories",
             "description": "Category management, CRUD operations"
@@ -87,22 +97,12 @@
                     }
                 }
             },
-
             "post": {
                 "tags": [
-                    "users", "auth"
+                    "users",
+                    "auth"
                 ],
                 "summary": "Create a new user, Register",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserInput"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "201": {
                         "description": "User created"
@@ -159,16 +159,6 @@
                         "description": "User ID"
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserInput"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "User updated"
@@ -198,7 +188,6 @@
                 }
             }
         },
-
         "/posts": {
             "get": {
                 "tags": [
@@ -288,7 +277,6 @@
                         "type": "integer",
                         "required": true
                     }
-
                 ],
                 "responses": {
                     "201": {
@@ -737,7 +725,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                            "description": "Post ID"
+                        "description": "Post ID"
                     },
                     {
                         "in": "query",
@@ -757,7 +745,6 @@
                         "description": "Unlove post failed"
                     }
                 }
-            
             }
         }
     },
@@ -767,33 +754,138 @@
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "User ID"
                     },
                     "username": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "User's unique username"
                     },
-                    "fullName": {
-                        "type": "string"
+                    "password": {
+                        "type": "string",
+                        "description": "User's password"
                     },
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "User's email address"
+                    },
+                    "fullName": {
+                        "type": "string",
+                        "description": "User's full name"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "description": "URL to the user's avatar image"
+                    },
+                    "DOB": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "User's date of birth"
+                    },
+                    "story": {
+                        "type": "string",
+                        "description": "User's story"
+                    },
+                    "relationship": {
+                        "type": "string",
+                        "description": "User's relationship status"
+                    },
+                    "relationshipDescription": {
+                        "type": "string",
+                        "description": "Description of the user's relationship status"
+                    },
+                    "nationality": {
+                        "type": "string",
+                        "description": "User's nationality"
+                    },
+                    "nationalityDescription": {
+                        "type": "string",
+                        "description": "Description of the user's nationality"
+                    },
+                    "company": {
+                        "type": "string",
+                        "description": "User's company"
+                    },
+                    "companyDescription": {
+                        "type": "string",
+                        "description": "Description of the user's company"
                     }
-                }
+                },
+                "required": [
+                    "id",
+                    "username",
+                    "password",
+                    "email",
+                    "fullName"
+                ]
             },
-            "UserInput": {
+            "Post": {
                 "type": "object",
                 "properties": {
-                    "username": {
-                        "type": "string"
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Post ID"
                     },
-                    "fullName": {
-                        "type": "string"
+                    "title": {
+                        "type": "string",
+                        "description": "Post's title"
                     },
-                    "email": {
-                        "type": "string"
+                    "content": {
+                        "type": "string",
+                        "description": "Post's content"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "User ID of the post's author"
                     }
-                }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "content",
+                    "userId"
+                ]
+            },
+            "Category": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Category ID"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Category's name"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name"
+                ]
+            },
+            "LovePost": {
+                "type": "object",
+                "properties": {
+                    "postId": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Post ID"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "User ID"
+                    }
+                },
+                "required": [
+                    "postId",
+                    "userId"
+                ]
             }
         }
     }
-}    
+}

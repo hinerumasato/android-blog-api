@@ -1,12 +1,14 @@
-import { authorization, createSession } from "@/middlewares";
+import { createSession } from "@/middlewares";
 import { mkdir } from "@/middlewares/mkdir";
 import { MigrationSynchronous } from "@/migration/synchronous";
 import { apiRouter } from "@/routes/api";
+import cors from "cors";
 import { configDotenv } from "dotenv";
 import express, { Application } from "express";
 import session from "express-session";
 import path from "path";
-import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+const swaggerDocument =  require("@/docs/swagger.json")
 configDotenv();
 
 export const useMiddlewares = (app: Application) => {
@@ -26,6 +28,10 @@ export const useMiddlewares = (app: Application) => {
 
 export const useStatic = (app: Application) => {
     app.use(express.static(path.join(process.cwd(), 'uploads')));
+}
+
+export const useSwagger = (app: Application) => {
+    app.use('/api-docs', cors(), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
 export const migrate = () => {
