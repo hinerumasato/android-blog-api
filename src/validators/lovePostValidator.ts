@@ -19,7 +19,7 @@ export class LovePostValidator implements IValidator {
 
     private lovePostValidate = (postId: number, userId: number): boolean => {
         const invalidFields = ResponseBody.getInvalidLovePostFields({ postId, userId });
-        if (Arrays.isEmpty(invalidFields)) {
+        if (!Arrays.isEmpty(invalidFields)) {
             this.errors = {
                 statusCode: 400,
                 message: 'Invalid fields',
