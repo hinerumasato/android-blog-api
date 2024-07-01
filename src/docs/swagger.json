@@ -40,6 +40,10 @@
         {
             "name": "love post",
             "description": "Love post operations"
+        },
+        {
+            "name": "comments",
+            "description": "Comment management, CRUD operations, root comment will have replyTo = 0"
         }
     ],
     "paths": {
@@ -449,10 +453,19 @@
                 "summary": "Create a new category",
                 "parameters": [
                     {
-                        "in": "formData",
+                        "in": "body",
                         "name": "name",
-                        "type": "string",
-                        "required": true
+                        "type": "json",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        
+                        }
                     }
                 ],
                 "responses": {
@@ -746,6 +759,229 @@
                     }
                 }
             }
+        },
+        "/comments": {
+            "get": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Find all comments or by condition",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false,
+                        "description": "Content to filter by"
+                    },
+                    {
+                        "in": "query",
+                        "name": "userId",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": false,
+                        "description": "User ID to filter by"
+                    },
+                    {
+                        "in": "query",
+                        "name": "postId",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": false,
+                        "description": "Post ID to filter by"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of comments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "content": {
+                                                "type": "string"
+                                            },
+                                            "userId": {
+                                                "type": "integer"
+                                            },
+                                            "postId": {
+                                                "type": "integer"
+                                            },
+                                            "replyTo": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Create a new comment",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "content",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "userId",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "postId",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "in": "formData",
+                        "name": "replyTo",
+                        "type": "integer",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Comment created"
+                    }
+                }
+            }
+        },
+        "/comments/{id}": {
+            "get": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Find comment by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "Comment ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single comment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "content": {
+                                            "type": "string"
+                                        },
+                                        "userId": {
+                                            "type": "integer"
+                                        },
+                                        "postId": {
+                                            "type": "integer"
+                                        },
+                                        "replyTo": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Update an existing comment",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "Comment ID"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "userId": {
+                                        "type": "integer"
+                                    },
+                                    "postId": {
+                                        "type": "integer"
+                                    },
+                                    "replyTo": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment updated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Delete a comment",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "Comment ID"
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -889,6 +1125,40 @@
                 "required": [
                     "postId",
                     "userId"
+                ]
+            },
+            "Comment": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Comment ID"
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "Comment's content"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "User ID of the comment's author"
+                    },
+                    "postId": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Post ID of the comment"
+                    },
+                    "replyTo": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Comment ID of the comment being replied to"
+                    }
+                },
+                "required": [
+                    "id",
+                    "content",
+                    "userId",
+                    "postId"
                 ]
             }
         }

@@ -18,6 +18,7 @@ export class User extends Model {
     public company!: string;
     public companyDescription!: string;
     public posts!: Array<Post>
+    public comments!: Array<Comment>
 
 };
 User.init({

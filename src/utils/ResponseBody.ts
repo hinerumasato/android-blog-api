@@ -33,4 +33,13 @@ export class ResponseBody {
         if(!userId) invalidFiels.push('userId');
         return invalidFiels;
     }
+
+    static getInvalidCommentFields = (body: any) => {
+        const { postId, userId, content } = body;
+        const invalidFiels = [];
+        if(!postId) invalidFiels.push('postId');
+        if(!userId) invalidFiels.push('userId');
+        if(!content) invalidFiels.push('content');
+        return invalidFiels;
+    }
 }

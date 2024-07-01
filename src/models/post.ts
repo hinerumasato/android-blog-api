@@ -2,6 +2,7 @@ import { sequelize } from "@/configs/database";
 import { DataTypes, Model } from "sequelize";
 import { User } from "./user";
 import { Category } from "./category";
+import { Comment } from "./comment";
 
 export class Post extends Model {
     public id!: number;
@@ -12,6 +13,7 @@ export class Post extends Model {
     public categoryId!: number;
     public user!: User;
     public category!: Category;
+    public comments!: Array<Comment>;
 }
 
 Post.init({

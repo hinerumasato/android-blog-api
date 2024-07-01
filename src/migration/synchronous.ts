@@ -1,7 +1,6 @@
-import { Post, User, Category } from "@/models";
-import { LovePost } from "@/models/lovePost";
+import { Post, User, Category, LovePost, Comment } from "@/models";
 export class MigrationSynchronous {
-    private models = [User, Category, Post, LovePost];
+    private models = [User, Category, Post, LovePost, Comment];
 
     public async migrate() {
         await this.establishRelationship();
@@ -45,6 +44,47 @@ export class MigrationSynchronous {
             foreignKey: 'postId',
             targetKey: 'id',
             as: 'post',
+        });
+
+        Comment.belongsTo(User, {
+            targetKey: 'id',
+            foreignKey: 'userId',
+            as: 'user',
+            onDelete: 'CASCADE',
+        });
+
+        Comment.belongsTo(Post, {
+            targetKey: 'id',
+            foreignKey: 'postId',
+            as: 'post',
+            onDelete: 'CASCADE',
+        });
+
+        Comment.belongsTo(Comment, {
+            targetKey: 'id',
+            foreignKey: 'replyTo',
+            as: 'reply',
+        });
+
+        User.hasMany(Comment, {
+            sourceKey: 'id',
+            foreignKey: 'userId',
+            as: 'comments',
+            onDelete: 'CASCADE',
+        });
+
+        Post.hasMany(Comment, {
+            sourceKey: 'id',
+            foreignKey: 'postId',
+            as: 'comments',
+            onDelete: 'CASCADE',
+        });
+
+        Comment.hasMany(Comment, {
+            sourceKey: 'id',
+            foreignKey: 'replyTo',
+            as: 'replies',
+            onDelete: 'CASCADE',
         });
     }
 

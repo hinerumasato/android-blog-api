@@ -6,8 +6,8 @@ const postApiRouter = express.Router();
 
 postApiRouter.get('/', postController.getAllPosts);
 postApiRouter.get('/:id', postController.getPostById);
-postApiRouter.post('/', thumbnailUpload, postController.createPost);
-postApiRouter.put('/:id', thumbnailUpload, postController.updatePost);
+postApiRouter.post('/', thumbnailUpload, postController.create);
+postApiRouter.put('/:id', thumbnailUpload, postController.update);
 postApiRouter.delete('/:id', postController.deletePost);
 
 export { postApiRouter }
