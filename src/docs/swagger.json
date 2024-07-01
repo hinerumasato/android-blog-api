@@ -216,6 +216,24 @@
                         },
                         "required": false,
                         "description": "Content to filter by"
+                    },
+                    {
+                        "in": "query",
+                        "name": "userId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false,
+                        "description": "Content to filter by"
+                    },
+                    {
+                        "in": "query",
+                        "name": "categoryId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false,
+                        "description": "Content to filter by"
                     }
                 ],
                 "responses": {
