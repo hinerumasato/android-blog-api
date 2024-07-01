@@ -86,6 +86,9 @@ class PostController {
             });
         }
         const file = req.file;
+        if(!isUpload || (isUpload as string).trim() !== 'true') {
+            Files.removeSync(file);
+        }
         const oldPost = await this.postService.findById(id);
         const thumbnail = (isUpload === 'true') ? Files.getPublicPath(file) : oldPost?.thumbnail;
         const post = Post.build({ title, content, userId, categoryId, thumbnail });
