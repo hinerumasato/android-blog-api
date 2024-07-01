@@ -1,6 +1,6 @@
 import { Post } from "@/models";
 import { PostService } from "@/services/postService";
-import { Arrays } from "@/utils";
+import { Arrays, Objects } from "@/utils";
 import { Files } from "@/utils/Files";
 import { ResponseBody } from "@/utils/ResponseBody";
 import { PostValidator } from "@/validators/PostValidator";
@@ -16,7 +16,10 @@ class PostController {
     }
 
     getAllPosts = async (req: Request, res: Response) => {
-        const posts = await this.postService.findAll();
+        const { title, userId, categoryId } = req.query;
+        const conditions = Objects.filterValidFields({ title, userId, categoryId });
+
+        const posts = await this.postService.findAllByCondition(conditions);
         if(!Arrays.isEmpty(posts)) {
             res.json({
                 statusCode: 200,
